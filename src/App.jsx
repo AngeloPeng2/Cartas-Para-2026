@@ -49,18 +49,36 @@ const App = () => {
   const [selectedLetter, setSelectedLetter] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [filter, setFilter] = useState('all');
-  const [testMode, setTestMode] = useState(true);
+  
+  // MODO REAL POR PADRÃO: testMode começa como false
+  const [testMode, setTestMode] = useState(false);
   const [isRaining, setIsRaining] = useState(false);
+  
+  // Contador para o segredo do modo teste
+  const [secretClicks, setSecretClicks] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000 * 60);
     return () => clearInterval(timer);
   }, []);
 
+  // Função para ativar o modo teste secretamente (5 cliques)
+  const handleSecretToggle = () => {
+    setSecretClicks(prev => {
+      const newCount = prev + 1;
+      if (newCount >= 5) {
+        setTestMode(!testMode);
+        return 0;
+      }
+      return newCount;
+    });
+    // Resetar cliques se demorar muito entre eles
+    setTimeout(() => setSecretClicks(0), 3000);
+  };
+
   const lettersData = useMemo(() => {
     const letters = [];
 
-    // Estrutura organizada por mês (4 semanas por mês = 48 semanas)
     const monthlyGroups = [
       { month: 0, texts: [
         { title: "Bem-vinda ao nosso ano", text: "Feliz Ano Novo, meu bem! Este site é o meu diário de amor para você. Em 2026, meu maior objetivo é te fazer sentir a mulher mais amada do mundo todos os dias. Mesmo com altos e baixos quero estar com você em todos os momentos sempre evoluindo juntos e por isso você é minha melhor escolha." },
@@ -159,20 +177,19 @@ const App = () => {
       });
     });
 
-    // --- CARTAS ESPECIAIS DIA 20 (Atualizadas com texto exato) ---
     const monthlyExtras = [
-      { m: 0, t: "Onde o tempo ganha sentido", c: "Meu amor, hoje celebramos 1 ano e 4 meses. Olho para trás e parece que te conheço de outras vidas, mas ao mesmo tempo, sinto aquela friozinho na barriga de quem acabou de se apaixonar. Estar com você é como encontrar o ritmo perfeito de uma música que eu quero ouvir para sempre. Obrigado por ser minha parceria nesse início de 2026. Que a gente continue escrevendo nossa história com a mesma intensidade do primeiro dia.", label: "1 ano e 4 meses" },
-      { m: 1, t: "A paz que eu encontrei em você", c: "1 ano e 5 meses. Sabe o que eu mais amo em nós? É a segurança de saber que, não importa o quão dificil seja os dias, o seu abraço é o meu conforto e a minha paz. Você me transforma em alguém melhor sem fazer esforço, apenas sendo exatamente quem você é. Cada dia ao seu lado é um aprendizado sobre paciência, doçura e entrega. Eu te amo cada vez mais.", label: "1 ano e 5 meses" },
-      { m: 2, t: "Meio ano de um novo ciclo", c: "Hoje fazemos 1 ano e 6 meses. É incrível pensar em tudo o que já superamos e em todas as risadas que compartilhamos até aqui. Você não é apenas o meu amor, você é simplismente TUDO para mim. Amo a forma como a gente se entende no olhar e como o nosso 'nós' se tornou a coisa mais preciosa da minha vida. Feliz metade de mais um ano de namoro, minha princesa!", label: "1 ano e 6 meses" },
-      { m: 3, t: "O brilho que você trouxe aos meus dias", c: "1 ano e 7 meses. Passamos pelo seu aniversário este mês, e celebrar a sua vida me fez refletir ainda mais sobre a sorte de te ter como namorada. Você é luz pura. Meu bem sua beleza, interna e externa, me deixa sem fôlego todos os dias. Obrigado por escolher dividir a sua luz comigo por mais esse mês. Eu sou completamente fascinado por você.", label: "1 ano e 7 meses" },
-      { m: 4, t: "Construindo o nosso paraíso", c: "Hoje completamos 1 ano e 8 meses. Olho para nós e vejo um alicerce cada vez mais forte. Amo planejar o futuro com você, desde a viagem do próximo mês até a casa que um dia será nossa. Obrigado por ser tão dedicada ao que temos. Cada detalhe seu é um motivo a mais para eu querer ficar com você para sempre.", label: "1 ano e 8 meses" },
-      { m: 5, t: "Além das datas, o sentimento", c: "1 ano e 9 meses. Acabamos de passar pelo Dia dos Namorados, mas o dia 20 continua sendo o meu favorito. É o nosso marco real, o dia em que o meu destino se entrelaçou ao seu de vez. Obrigado por ser o meu porto seguro e por me mostrar que o amor de verdade não é perfeito, mas é real e vale cada segundo. Meu coração bate no ritmo do seu.", label: "1 ano e 9 meses" },
-      { m: 6, t: "Contagem regressiva para o nosso marco", c: "1 ano e 10 meses. Estamos chegando perto de uma marca linda, mas hoje quero focar no agora. Amo como a gente se diverte com pouco, como um filme se torna o melhor evento do mundo se eu tiver você do lado. Você é a minha melhor companhia e a dona dos meus pensamentos mais bonitos. Obrigado por mais um mês de puro amor.", label: "1 ano e 10 meses" },
-      { m: 7, t: "Na véspera do nosso grande dia", c: "1 ano e 11 meses. No mês que vem, nossa história completa um novo capítulo gigante, mas hoje meu peito transborda gratidão por este último mês. Você me faz sentir vivo, me faz querer evoluir e me dá o carinho que eu sempre sonhei. Quase dois anos... e eu ainda sinto que estou apenas começando a te amar o tanto que você merece.", label: "1 ano e 11 meses" },
-      { m: 8, t: "24 meses, 730 dias e uma eternidade pela frente", c: "Meu amor, hoje completamos 2 anos. 730 dias desde que decidimos que seríamos um do outro. Dois anos de aprendizado, de amadurecimento e de uma felicidade que eu nunca achei que fosse possível. Vinte e quatro meses escolhendo você todos os dias, e se eu pudesse voltar no tempo, te escolheria mil vezes mais rápido.\n\nNesses dois anos, você viu minhas melhores e piores versões, e em cada uma delas, você me amou. Você transformou minha rotina em aventura e meus medos em coragem. Construímos uma cumplicidade que eu achei que só existia em filmes. Olho para trás e vejo o quanto amadurecemos, o quanto aprendemos um com o outro e o quanto o nosso amor se tornou algo único.\n\nVocê é a mulher da minha vida. Obrigado por esses 2 anos de risadas, de beijos, de mãos dadas e de muito amor. Feliz aniversário de 2 anos para nós! Que esse seja apenas o prefácio de uma história que nunca terá fim. Eu te amo infinitamente.\n\n[CUPOM MASTER]: Vale uma viagem ou um jantar inesquecível (escolha do casal).\n[DESAFIO]: Escreva em um papel onde você quer que a gente esteja quando completarmos 3 anos. Vamos fazer de tudo para que estejamos lá dia 20/09/2027", label: "🏆 2 ANOS" },
-      { m: 9, t: "O início do nosso terceiro ano", c: "Hoje celebramos 2 anos e 1 mês. Entramos em uma nova fase, e o que eu mais sinto é empolgação. Empolgação para descobrir novas coisas sobre você, para te beijar como se fosse a primeira vez e para continuar sendo o homem que vai te apoiar em tudo. O 'para sempre' começou a ser construído lá atrás, e cada dia 20 é um tijolo a mais nesse castelo.", label: "2 anos e 1 mês" },
-      { m: 10, t: "2 anos e 2 meses", c: "2 anos e 2 meses. O tempo pode passar, os anos podem mudar, mas o jeito que eu te olho nunca vai mudar. Você continua sendo a garota que faz meu coração disparar. Obrigado por não deixar a chama apagar e por ser tão intensa e verdadeira comigo. Sou grato por cada segundo desses 26 meses.", label: "2 anos e 2 meses" },
-      { m: 11, t: "Fechando o ano no seu abraço", c: "2 anos e 3 meses. Estamos terminando mais um ano, mas o nosso calendário particular está a todo vapor. Olho para este 2026 e vejo que o dia 20 foi o meu farol em todos os meses. Obrigado por ter sido a melhor parte do meu ano e por ser a melhor parte de mim. Que venha 2027, porque com você, qualquer ano é o melhor da minha vida.", label: "2 anos e 3 meses" },
+      { m: 0, t: "Onde o tempo ganha sentido", c: "Meu amor, hoje celebramos 1 ano e 4 meses. Olho para trás e parece que te conheço de outras vidas, mas ao mesmo tempo, sinto aquela friozinho na barriga de quem acabou de se apaixonar...", label: "1 ano e 4 meses" },
+      { m: 1, t: "A paz que eu encontrei em você", c: "1 ano e 5 meses. Sabe o que eu mais amo em nós? É a segurança de saber que, não importa o quão dificil seja os dias, o seu abraço é o meu conforto...", label: "1 ano e 5 meses" },
+      { m: 2, t: "Meio ano de um novo ciclo", c: "Hoje fazemos 1 ano e 6 meses. É incrível pensar em tudo o que já superamos e em todas as risadas que compartilhamos até aqui...", label: "1 ano e 6 meses" },
+      { m: 3, t: "O brilho que você trouxe aos meus dias", c: "1 ano e 7 meses. Passamos pelo seu aniversário este mês, e celebrar a sua vida me fez refletir ainda mais...", label: "1 ano e 7 meses" },
+      { m: 4, t: "Construindo o nosso paraíso", c: "Hoje completamos 1 ano e 8 meses. Olho para nós e vejo um alicerce cada vez mais forte...", label: "1 ano e 8 meses" },
+      { m: 5, t: "Além das datas, o sentimento", c: "1 ano e 9 meses. Acabamos de passar pelo Dia dos Namorados, mas o dia 20 continua sendo o meu favorito...", label: "1 ano e 9 meses" },
+      { m: 6, t: "Contagem regressiva para o nosso marco", c: "1 ano e 10 meses. Estamos chegando perto de uma marca linda, mas hoje quero focar no agora...", label: "1 ano e 10 meses" },
+      { m: 7, t: "Na véspera do nosso grande dia", c: "1 ano e 11 meses. No mês que vem, nossa história completa um novo capítulo gigante...", label: "1 ano e 11 meses" },
+      { m: 8, t: "24 meses, 730 dias e uma eternidade pela frente", c: "Meu amor, hoje completamos 2 anos. 730 dias desde que decidimos que seríamos um do outro...", label: "🏆 2 ANOS" },
+      { m: 9, t: "O início do nosso terceiro ano", c: "Hoje celebramos 2 anos e 1 mês. Entramos em uma nova fase, e o que eu mais sinto é empolgação...", label: "2 anos e 1 mês" },
+      { m: 10, t: "2 anos e 2 meses", c: "2 anos e 2 meses. O tempo pode passar, os anos podem mudar, mas o jeito que eu te olho nunca vai mudar...", label: "2 anos e 2 meses" },
+      { m: 11, t: "Fechando o ano no seu abraço", c: "2 anos e 3 meses. Estamos terminando mais um ano, mas o nosso calendário particular está a todo vapor...", label: "2 anos e 3 meses" },
     ];
 
     monthlyExtras.forEach((item) => {
@@ -189,13 +206,12 @@ const App = () => {
       });
     });
 
-    // --- CARTA DE ANIVERSÁRIO (Atualizada com texto exato) ---
     const bdayDate = new Date('2026-04-11T00:00:00');
     letters.push({
       id: 'birthday',
       type: 'birthday',
       title: "O dia em que o mundo ficou mais bonito",
-      content: "Meu amor, hoje o dia é todo seu, mas o presente é meu por poder dividir a vida com você. Olho para você e vejo uma mulher que floresce a cada ano, ficando mais sábia, mais linda e mais inspiradora. Que este novo ciclo te traga tanta alegria quanto você traz para o meu coração. Eu estarei aqui para aplaudir cada uma das suas vitórias. Feliz aniversário, minha Princesa\n\n[CUPOM ESPECIAL]: Vale um desejo qualquer. Peça o que quiser hoje, e eu farei acontecer.\n[DESAFIO]: Hoje você não pode lavar um copo ou se preocupar com nada. Seu único trabalho é ser mimada!",
+      content: "Meu amor, hoje o dia é todo seu, mas o presente é meu por poder dividir a vida com você...",
       date: bdayDate,
       dateString: "11 de Abril",
       isSpecial: true
@@ -218,21 +234,24 @@ const App = () => {
     <div className="min-h-screen bg-[#fffcf9] text-[#5a4a42] font-serif selection:bg-rose-100 overflow-x-hidden">
       <HeartRain active={isRaining} />
 
-      <div className="fixed bottom-4 right-4 md:top-4 md:right-4 md:bottom-auto z-[60]">
-        <button 
-          onClick={() => setTestMode(!testMode)}
-          className={`flex items-center gap-2 px-3 py-2 rounded-full text-[10px] md:text-xs font-sans font-bold shadow-lg transition-all
-            ${testMode ? 'bg-amber-500 text-white' : 'bg-white text-stone-400 border border-stone-200'}
-          `}
-        >
-          {testMode ? <Eye size={12} /> : <EyeOff size={12} />}
-          {testMode ? 'MODO TESTE' : 'MODO REAL'}
-        </button>
-      </div>
+      {/* Indicador discreto apenas quando o modo teste está ativado */}
+      {testMode && (
+        <div className="fixed bottom-4 left-4 z-[60] opacity-50 pointer-events-none">
+          <span className="bg-amber-100 text-amber-600 px-2 py-1 rounded text-[10px] font-sans font-bold">
+            MODO TESTE ATIVO
+          </span>
+        </div>
+      )}
 
       <header className="relative py-10 md:py-16 px-4 text-center overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-          <div className="absolute top-5 left-5"><Heart size={30} fill="currentColor" /></div>
+          {/* O SEGREDO: Clique 5 vezes neste coração para alternar o modo teste */}
+          <div 
+            className="absolute top-5 left-5 cursor-pointer pointer-events-auto transition-transform active:scale-90"
+            onClick={handleSecretToggle}
+          >
+            <Heart size={30} fill="currentColor" className={testMode ? "text-amber-500" : ""} />
+          </div>
           <div className="absolute bottom-5 right-5"><Sparkles size={30} /></div>
         </div>
         
