@@ -433,7 +433,7 @@ const App = () => {
       )}
 
       <footer className="py-10 border-t border-stone-100 text-center font-sans text-stone-400 text-[10px] px-4">
-        <p>Projeto Eternidade 2026 - Versão Final Revisada</p>
+        <p>Feito Com Muito Amor e Carinho - Angelo S. Penga</p>
       </footer>
 
       <style>{`
