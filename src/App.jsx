@@ -315,7 +315,7 @@ const App = () => {
         
         <div className="relative z-10 max-w-2xl mx-auto">
           <span className="inline-block mb-3 px-3 py-1 text-[10px] md:text-xs tracking-widest uppercase bg-rose-50 text-rose-400 rounded-full font-sans font-semibold">
-            Para <span className="italic text-rose-500">Izabela Prado Ferreira</span>
+            Para Izabela Prado Ferreira
           </span>
           <h1 className="text-3xl md:text-6xl font-light mb-4 text-[#4a3a32] px-2 leading-tight">
             Cartas para <span className="italic text-rose-500">Meu Amor</span>
