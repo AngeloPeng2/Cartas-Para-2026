@@ -315,13 +315,13 @@ const App = () => {
         
         <div className="relative z-10 max-w-2xl mx-auto">
           <span className="inline-block mb-3 px-3 py-1 text-[10px] md:text-xs tracking-widest uppercase bg-rose-50 text-rose-400 rounded-full font-sans font-semibold">
-            Cronograma 2026 Revisado
+            Cronograma de Amor para 2026
           </span>
           <h1 className="text-3xl md:text-6xl font-light mb-4 text-[#4a3a32] px-2 leading-tight">
             Cartas para <span className="italic text-rose-500">Meu Amor</span>
           </h1>
           <p className="text-sm md:text-lg text-[#8a7a72] max-w-lg mx-auto italic px-4 leading-relaxed">
-            Todas as nossas datas especiais, com os textos que você tanto esperou.
+          Um ano inteiro de carinho, planeado para te fazer sorrir todos os dias.
           </p>
         </div>
       </header>
